@@ -6,7 +6,7 @@ I wanted to create something to practice my sorting algorithms, as well as to pr
 
 ## Check out the demo page
 
-- TODO: add link to demo page
+https://brancisco.github.io/sorting-visualizer
 
 <img height="600" src="./meta/img/demopage.jpeg">
 
@@ -17,3 +17,5 @@ I wanted to create something to practice my sorting algorithms, as well as to pr
 - [ ] Add Selection Sort
 - [ ] Add Heap Sort
 - [ ] Add better sliders and buttons in toolbar.
+
+<div>Icons made by <a href="https://www.flaticon.com/authors/roundicons" title="Roundicons">Roundicons</a>, and <a href="" title="SumberRejeki">SumberRejeki</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
