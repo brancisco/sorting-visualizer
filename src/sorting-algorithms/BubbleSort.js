@@ -43,6 +43,7 @@ export default class BubbleSort {
             this.index ++
             this.stepCount ++
         }
+        return true
     }
 
     sort () {

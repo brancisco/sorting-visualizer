@@ -10,7 +10,7 @@ export default class MergeSort {
         this.mergeIndexR = 0
         this.mergeMemory = []
         this.splitting = true
-        this.didSplit = false
+        this.splitCount = 0
     }
 
     setData (data) {
@@ -23,43 +23,44 @@ export default class MergeSort {
         this.mergeIndexR = 0
         this.mergeMemory = []
         this.splitting = true
-        this.didSplit = false
+        this.splitCount = 0
     }
 
     step () {
-        let i = this.memoryIndex
-        if (this.sorted) return;
-        if (i >= this.memory.length) {
-            if (!this.didSplit) {
-                this.splitting = false
-            }
+        let delay = true
+        // console.log('stepping:', this.splitCount)
+        if (this.sorted) return false 
+        if (this.splitting && this.splitCount >= this.data.length - 1) {
+            this.splitting = false
             this.memoryIndex = 0
-            i = this.memoryIndex
-            this.didSplit = false
         }
-
+        const i = this.memoryIndex
+        
         if (this.splitting && this.memory[i].length > 1) {
             this._split()
         } else if (this.splitting && this.memory[i].length == 1) {
             this.memoryIndex ++
-        } else if (this.splitting) {
-            this.memoryIndex = 0
-            this.splitting = false
+            delay = false
         } else if (!this.splitting && this.memory.length === 1) {
             this.memory = this.memory[0]
             this.sorted = true
         } else {
             this._merge()
         }
+
+        if (this.memoryIndex >= this.memory.length) {
+            this.memoryIndex = 0
+        }
+        return delay
     }
 
     _split () {
-        this.didSplit = true
+        // console.log('splitting')
         const i = this.memoryIndex
         const memoryLength = this.memory.length
         const element = this.memory[i]
 
-        const middle = Math.ceil(element.length / 2)
+        const middle = Math.floor(element.length / 2)
         const split = [element.slice(0, middle), element.slice(middle)]
         if (i < this.memory.length - 1) {
             this.memory = [].concat(this.memory.slice(0, i), split, this.memory.slice(i+1))
@@ -67,9 +68,11 @@ export default class MergeSort {
             this.memory = [].concat(this.memory.slice(0, i), split)
         }
         this.memoryIndex = this.memoryIndex + 2
+        this.splitCount ++
     }
 
     _merge () {
+        // console.log('merging')
         const i = this.memoryIndex
         const jl = this.mergeIndexL
         const jr = this.mergeIndexR
