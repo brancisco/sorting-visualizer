@@ -52,7 +52,7 @@
                     const normal = this.$d3.randomNormal((i/this.n), 0.07)
                     toy.push({
                         id: i,
-                        value: Math.max(0.02, Math.abs(normal()))*89
+                        value: Math.max(0.02, Math.abs(normal()))*85
                     })
                 }
                 this.toy = toy
@@ -67,7 +67,6 @@
                     .join('rect')
                         .classed('playing', this.play)
                         .classed('mergebar', true)
-                        .classed('current', (d, i) => i === this.algorithm.index)
                         .classed('mergesorted', this.algorithm.sorted)
                         .attr("fill", (d) => {
                             // if (this.algorithm.sorted) return '#55E6C1'
@@ -83,6 +82,54 @@
                         .attr('y', (d, i) => i*this.barHeight)
                         .attr('height', this.barHeight - 0.5)
                         .attr('width', d => `${d.value}%`)
+                if (this.algorithm.p !== null &&
+                    this.algorithm.q !== null &&
+                    this.algorithm.r !== null) {
+                    this.bars
+                        .selectAll("circle")
+                        .data([
+                            this.algorithm.p,
+                            this.algorithm.q,
+                            this.algorithm.r,
+                        ])
+                        .join('circle')
+                            .attr('cx', (i) => `${this.toy[i].value}%`)
+                            .attr('cy', (i) => i*this.barHeight + (this.barHeight / 2))
+                            .attr('r', Math.min(Math.max(15, this.barHeight/2), 30))
+                            .attr('transform', `translate(${5 + this.barHeight/2}, 0)`)
+                            .attr('fill', '#2C3A47')
+                    this.bars
+                        .selectAll("text")
+                        .data([
+                            this.algorithm.p,
+                            this.algorithm.q,
+                            this.algorithm.r,
+                        ])
+                        .join('text')
+                            .attr('x', (i) => `${this.toy[i].value}%`)
+                            .attr('y', (i) => 5 + i*this.barHeight + (this.barHeight / 2))
+                            .attr('transform', `translate(${3 + this.barHeight/2}, 0)`)
+                            .text((i) => {
+                                if (this.algorithm.p === i && this.algorithm.q === i) {
+                                    return 'pq'
+                                } else if (this.algorithm.p === i) {
+                                    return 'p'
+                                } else if (this.algorithm.q === i) {
+                                    return 'q'
+                                } else if (this.algorithm.r === i) {
+                                    return 'r'
+                                }
+                            })
+                            .attr('fill', 'white')
+                            .attr('text-anchor', 'middle')
+                } else {
+                    this.bars
+                        .selectAll("circle")
+                        .remove()
+                    this.bars
+                        .selectAll("text")
+                        .remove()
+                }
 
                 const firstMem = this.algorithm.mergeMemory[0]
                 let ind = 0 
@@ -111,6 +158,7 @@
                 const delay = this.algorithm.step()
                 this.toy = [].concat(...this.algorithm.memory)
                 if (this.algorithm.sorted) {
+                    this.algorithm.step()
                     this.$store.commit('setPlay', false)
                 }
                 return delay
@@ -132,7 +180,6 @@
                 this.barsMem = this.$d3.select('#sortable')
                     .append('g')
                     .attr("class", "mems")
-                // this.colorfn = this.$d3.interpolateHsl('#1B9CFC', '#FC427B')
                 this.colorfn = this.$d3.interpolateSpectral
                 this.generateNewData()
             })
