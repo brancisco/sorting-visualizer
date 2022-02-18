@@ -4,7 +4,7 @@ A web app that provides visual representations of different sorting algorithms.
 
 I wanted to create something to practice my sorting algorithms, as well as to provide a learning tool to others who want to better understand sorting algorithms through visual animations.
 
-## Check out the demo page
+## Check out the demo page!
 
 https://brancisco.github.io/sorting-visualizer
 
